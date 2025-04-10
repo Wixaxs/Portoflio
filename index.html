@@ -26,7 +26,6 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/examples/js/geometries/TextGeometry.js"></script>
 
   <script>
-    updateSizes();
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
 
@@ -56,7 +55,9 @@
     let fontSize = 0.6;
 
     function updateSizes() {
-      const isMobile = $(window).width() < 768;
+      // Detekcja mobilna: szerokość + userAgent
+      const isMobile = $(window).width() < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
       radius = isMobile ? 5 : 8;
       fontSize = isMobile ? 0.4 : 0.6;
       camera.position.z = isMobile ? 50 : 20;
@@ -65,6 +66,7 @@
       ringGroup.scale.set(scale, scale, scale);
       ringGroup2.scale.set(scale, scale, scale);
     }
+
 
     $(document).ready(() => {
       updateSizes();
@@ -190,6 +192,7 @@
         location.reload();
       }
     });
+
   </script>
 </body>
 </html>
