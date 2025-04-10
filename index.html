@@ -1,198 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Portfolio</title>
-  <style>
-    * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: black; }
-    canvas { display: block; width: 100%; height: 100%; margin: 0 auto; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    @media (max-width: 768px) {
-      canvas {
-        width: 80%;
-        height: auto;
-        aspect-ratio: 1.5;
-      }
-    }
-  </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-  <!-- ✅ jQuery -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Portfolio</title>
 </head>
 <body>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/examples/js/loaders/FontLoader.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/examples/js/geometries/TextGeometry.js"></script>
-
-  <script>
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000);
-
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight, false);
-    document.body.appendChild(renderer.domElement);
-
-    const light = new THREE.PointLight(0xffffff, 2);
-    light.position.set(10, 10, 10);
-    scene.add(light);
-
-    const ambientLight = new THREE.AmbientLight(0x404040);
-    scene.add(ambientLight);
-
-    const ringGroup = new THREE.Group();
-    const ringGroup2 = new THREE.Group();
-    scene.add(ringGroup);
-    scene.add(ringGroup2);
-
-    let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
-    let rotationVelocityY = 0.004;
-
-    let radius = 8;
-    let fontSize = 0.6;
-
-    function updateSizes() {
-      // Detekcja mobilna: szerokość + userAgent
-      const isMobile = $(window).width() < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-
-      radius = isMobile ? 5 : 8;
-      fontSize = isMobile ? 0.4 : 0.6;
-      camera.position.z = isMobile ? 30 : 20;
-
-      const scale = isMobile ? 0.7 : 1;
-      ringGroup.scale.set(scale, scale, scale);
-      ringGroup2.scale.set(scale, scale, scale);
-    }
+    <header>
+        <p class="fsize128 tcenter">WIXAXS</p>
+    </header>
+    <hr style="width: 80dvw;" class="vr">
+    <section id="animation" style="position: relative; width: 100dvw; height: 600px;">
+    </section>
+    <section>
+        <header class="tcenter">
+            <p class="fsize64">PROJECTS</p>
+        </header>
+        <section class="flex wrap projects juscenter">
+            <div class="project border radius30 mojkampus" data-bg="images/mojkampus.svg"><a href="https://mojkampus.pl/" target="_blank" class="fsize36">Mój kampus</a></div>
+            <div class="project border radius30 yotf"><a href="https://youthofthefuture.pl/" target="_blank" class="fsize32">Youth Of The Future</a></div>
+            <div class="project border radius30 rkp"><a href="https://www.rkpsprowrybnik.pl/" target="_blank" class="fsize36">RKP ROW</a></div>
+            <div class="project border radius30 sboost"><a href="https://sportboost.pl//" target="_blank" class="fsize36">SportBoost</a></div>
+            <div class="project border radius30 pkcasino"><a href="http://pkcasino.zscz-l.pl/" target="_blank" class="fsize36">PK casino</a></div>
+            <div class="project border radius30 lonely"><a href="https://github.com/Wixaxs/Lonely_Abyss" target="_blank" class="fsize36">Lonely Abyss</a></div>
+        </section>
+    </section>
+    <section class="flex column gap50" style="padding: 5dvw 10dvw;">
+        <header class="tcenter">
+            <p class="fsize64">ABOUT ME</p>
+        </header>
+        <section class="border radius20 flex row juscenter gap50"  style="padding: 2dvw 3dvw;">
+            <picture class="flex column juscenter">
+                <a href="https://www.discordapp.com/users/@wixaxs"><img src="images/discord.svg" alt="discord"></a>
+                <a href="https://github.com/Wixaxs"><img src="images/github.svg" alt="github"></a>
+                <a href=""><img src="images/linkedin.svg" alt="linkedin"></a>
+            </picture>
+            <div class="vr border"></div>
+            <div class="flex column gap50">
+                <header>
+                    <p class="fsize36">Patryk Wawrzynek <img src="images/pin.svg" alt="pin"> Poland, Katowice</p>
+                </header>
+                <p class="fsize32">I’m a beginner programmer and a student at a technical high school, majoring in Software Development. I’m currently learning how to build websites and web applications using HTML, CSS, and JavaScript, and I’m diving deeper into tools like React and Tailwind.I’m eager to gain real-world experience, grow as a developer, and work with others in meaningful projects. I’d be happy to join a team as a junior developer, and my long-term goal is to become a full stack developer.</p>
+            </div>
+        </section>
+    </section>
 
 
-    $(document).ready(() => {
-      updateSizes();
-    });
+    <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/examples/js/geometries/TextGeometry.js"></script>
+    <script>
+        const container = document.getElementById('animation');
 
-    renderer.domElement.addEventListener('mousedown', (event) => {
-      isDragging = true;
-      previousMousePosition = {
-        x: event.clientX,
-        y: event.clientY
-      };
-    });
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x111111);
 
-    renderer.domElement.addEventListener('mouseup', () => {
-      isDragging = false;
-    });
+        const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.z = 20;
 
-    renderer.domElement.addEventListener('mousemove', (event) => {
-      if (!isDragging) return;
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight, false);
+        container.appendChild(renderer.domElement);
 
-      const deltaMove = {
-        x: event.clientX - previousMousePosition.x,
-        y: event.clientY - previousMousePosition.y
-      };
+        const light = new THREE.PointLight(0xffffff, 2);
+        light.position.set(10, 10, 10);
+        scene.add(light);
 
-      const deltaRotationY = deltaMove.x * 0.005;
-      const deltaRotationX = deltaMove.y * 0.005;
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
 
-      rotationVelocityY = deltaRotationY;
+        const ringGroup = new THREE.Group();
+        const ringGroup2 = new THREE.Group();
+        scene.add(ringGroup);
+        scene.add(ringGroup2);
 
-      ringGroup.rotation.y += deltaRotationY;
-      ringGroup2.rotation.y -= deltaRotationY;
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let rotationVelocityY = 0.004;
 
-      ringGroup.rotation.x += deltaRotationX;
-      ringGroup2.rotation.x += deltaRotationX;
+        let radius = 8;
+        let fontSize = 0.6;
 
-      previousMousePosition = {
-        x: event.clientX,
-        y: event.clientY
-      };
-    });
+        function updateSizes() {
+            const isMobile = $(window).width() < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+            radius = isMobile ? 5 : 8;
+            fontSize = isMobile ? 0.4 : 0.6;
+            camera.position.z = isMobile ? 20 : 20;
 
-    const loader = new THREE.FontLoader();
-    loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-      const fullText = 'HTML  CSS  JAVASCRIPT  JQUERY  REACTJS  TAILWINDCSS  PYTHON ';
-      const letters = fullText.split('').reverse();
-      const total = letters.length;
+            const scale = isMobile ? 0.7 : 1;
+            ringGroup.scale.set(scale, scale, scale);
+            ringGroup2.scale.set(scale, scale, scale);
+        }
 
-      letters.forEach((char, i) => {
-        if (char === ' ') return;
-
-        const geometry = new THREE.TextGeometry(char, {
-          font: font,
-          size: fontSize,
-          height: 0.05,
-          curveSegments: 8
+        $(document).ready(() => {
+        updateSizes();
         });
 
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const mesh = new THREE.Mesh(geometry, material);
-
-        const angle = (i / total) * Math.PI * 2;
-        const x = radius * Math.cos(angle);
-        const z = radius * Math.sin(angle);
-
-        mesh.position.set(x, 0, z);
-        mesh.lookAt(0, 0, 0);
-        mesh.rotation.y += Math.PI;
-
-        ringGroup.add(mesh);
-      });
-
-      const fullText2 = ' PYTHON TAILWINDCSS REACTJS JQUERY JAVASCRIPT CSS HTML ';
-      const letters2 = fullText2.split('').reverse();
-      const total2 = letters2.length;
-
-      letters2.forEach((char, i) => {
-        if (char === ' ') return;
-
-        const geometry = new THREE.TextGeometry(char, {
-          font: font,
-          size: fontSize,
-          height: 0.05,
-          curveSegments: 8
+        renderer.domElement.addEventListener('mousedown', (event) => {
+        isDragging = true;
+        previousMousePosition = {
+            x: event.clientX,
+            y: event.clientY
+        };
         });
 
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const mesh = new THREE.Mesh(geometry, material);
+        renderer.domElement.addEventListener('mouseup', () => {
+        isDragging = false;
+        });
 
-        const angle = (i / total2) * Math.PI * 2;
-        const x = radius * Math.cos(angle);
-        const z = radius * Math.sin(angle);
+        renderer.domElement.addEventListener('mousemove', (event) => {
+        if (!isDragging) return;
 
-        mesh.position.set(x, 0, z);
-        mesh.lookAt(0, 0, 0);
-        mesh.rotation.y += Math.PI;
+        const deltaMove = {
+            x: event.clientX - previousMousePosition.x,
+            y: event.clientY - previousMousePosition.y
+        };
 
-        ringGroup2.add(mesh);
-      });
-    });
+        const deltaRotationY = deltaMove.x * 0.005;
+        const deltaRotationX = deltaMove.y * 0.005;
 
-    function animate() {
-      requestAnimationFrame(animate);
+        rotationVelocityY = deltaRotationY;
 
-      if (!isDragging) {
-        ringGroup.rotation.y += rotationVelocityY;
-        ringGroup2.rotation.y -= rotationVelocityY;
+        ringGroup.rotation.y += deltaRotationY;
+        ringGroup2.rotation.y -= deltaRotationY;
 
-        ringGroup.rotation.x = Math.sin(Date.now() * 0.001) * 0.3;
-        ringGroup2.rotation.x = Math.sin(Date.now() * 0.001 + 2) * 0.3;
-      }
+        ringGroup.rotation.x += deltaRotationX;
+        ringGroup2.rotation.x += deltaRotationX;
 
-      renderer.render(scene, camera);
-    }
+        previousMousePosition = {
+            x: event.clientX,
+            y: event.clientY
+        };
+        });
 
-    animate();
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+        const fullText = 'HTML  CSS  JAVASCRIPT  JQUERY  REACTJS  TAILWINDCSS  PYTHON ';
+        const letters = fullText.split('').reverse();
+        const total = letters.length;
 
-    // ✅ Odśwież stronę, jeśli zmieni się szerokość
-    let currentWidth = $(window).width();
+        letters.forEach((char, i) => {
+            if (char === ' ') return;
 
-    $(window).on('resize', () => {
-      if ($(window).width() !== currentWidth) {
-        location.reload();
-      }
-    });
+            const geometry = new THREE.TextGeometry(char, {
+            font: font,
+            size: fontSize,
+            height: 0.05,
+            curveSegments: 8
+            });
 
-  </script>
+            const material = new THREE.MeshBasicMaterial({ color: 0xDCDCDC });
+            const mesh = new THREE.Mesh(geometry, material);
+
+            const angle = (i / total) * Math.PI * 2;
+            const x = radius * Math.cos(angle);
+            const z = radius * Math.sin(angle);
+
+            mesh.position.set(x, 0, z);
+            mesh.lookAt(0, 0, 0);
+            mesh.rotation.y += Math.PI;
+
+            ringGroup.add(mesh);
+        });
+
+        const fullText2 = ' PYTHON TAILWINDCSS REACTJS JQUERY JAVASCRIPT CSS HTML ';
+        const letters2 = fullText2.split('').reverse();
+        const total2 = letters2.length;
+
+        letters2.forEach((char, i) => {
+            if (char === ' ') return;
+
+            const geometry = new THREE.TextGeometry(char, {
+            font: font,
+            size: fontSize,
+            height: 0.05,
+            curveSegments: 8
+            });
+
+            const material = new THREE.MeshBasicMaterial({ color: 0xDCDCDC });
+            const mesh = new THREE.Mesh(geometry, material);
+
+            const angle = (i / total2) * Math.PI * 2;
+            const x = radius * Math.cos(angle);
+            const z = radius * Math.sin(angle);
+
+            mesh.position.set(x, 0, z);
+            mesh.lookAt(0, 0, 0);
+            mesh.rotation.y += Math.PI;
+
+            ringGroup2.add(mesh);
+        });
+        });
+
+        function animate() {
+        requestAnimationFrame(animate);
+
+        if (!isDragging) {
+            ringGroup.rotation.y += rotationVelocityY;
+            ringGroup2.rotation.y -= rotationVelocityY;
+
+            ringGroup.rotation.x = Math.sin(Date.now() * 0.001) * 0.3;
+            ringGroup2.rotation.x = Math.sin(Date.now() * 0.001 + 2) * 0.3;
+        }
+
+        renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // ✅ Odświeżenie przy zmianie szerokości + aktualizacja renderera
+        let currentWidth = $(window).width();
+        window.addEventListener('resize', () => {
+        if ($(window).width() !== currentWidth) {
+            location.reload();
+        }
+
+        renderer.setSize(container.clientWidth, container.clientHeight, false);
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        });
+    </script>
 </body>
 </html>
