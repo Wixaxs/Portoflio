@@ -1,22 +1,194 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Responsywny Pierścień 3D</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: black; }
+    canvas { display: block; width: 100%; height: 100%; margin: 0 auto; }
 
-  <head>
+    @media (max-width: 768px) {
+      canvas {
+        width: 80%;
+        height: auto;
+        aspect-ratio: 1.5;
+      }
+    }
+  </style>
 
-     <meta charset="utf-8">
-     <title>Moja witryna</title>
+  <!-- ✅ jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/examples/js/loaders/FontLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/examples/js/geometries/TextGeometry.js"></script>
 
-     <meta name="description" content="Opis zawartości strony dla wyszukiwarek">
-     <meta name="keywords" content="słowa, kluczowe, opisujące, zawartość">
-     <meta name="author" content="Jan Programista">
+  <script>
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
 
-     <meta http-equiv="X-Ua-Compatible" content="IE=edge,chrome=1">
-     <link rel="stylesheet" href="arkusz.css">
-     <script src="skrypt.js"></script>
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-  </head>
-  <body>
-    <p>Czesc</p>
-  </body>
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
+    document.body.appendChild(renderer.domElement);
 
+    const light = new THREE.PointLight(0xffffff, 2);
+    light.position.set(10, 10, 10);
+    scene.add(light);
+
+    const ambientLight = new THREE.AmbientLight(0x404040);
+    scene.add(ambientLight);
+
+    const ringGroup = new THREE.Group();
+    const ringGroup2 = new THREE.Group();
+    scene.add(ringGroup);
+    scene.add(ringGroup2);
+
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    let rotationVelocityY = 0.004;
+
+    let radius = 8;
+    let fontSize = 0.6;
+
+    function updateSizes() {
+      const isMobile = $(window).width() < 768;
+      radius = isMobile ? 5 : 8;
+      fontSize = isMobile ? 0.4 : 0.6;
+      camera.position.z = isMobile ? 50 : 20;
+
+      const scale = isMobile ? 0.7 : 1;
+      ringGroup.scale.set(scale, scale, scale);
+      ringGroup2.scale.set(scale, scale, scale);
+    }
+
+    $(document).ready(() => {
+      updateSizes();
+    });
+
+    renderer.domElement.addEventListener('mousedown', (event) => {
+      isDragging = true;
+      previousMousePosition = {
+        x: event.clientX,
+        y: event.clientY
+      };
+    });
+
+    renderer.domElement.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    renderer.domElement.addEventListener('mousemove', (event) => {
+      if (!isDragging) return;
+
+      const deltaMove = {
+        x: event.clientX - previousMousePosition.x,
+        y: event.clientY - previousMousePosition.y
+      };
+
+      const deltaRotationY = deltaMove.x * 0.005;
+      const deltaRotationX = deltaMove.y * 0.005;
+
+      rotationVelocityY = deltaRotationY;
+
+      ringGroup.rotation.y += deltaRotationY;
+      ringGroup2.rotation.y -= deltaRotationY;
+
+      ringGroup.rotation.x += deltaRotationX;
+      ringGroup2.rotation.x += deltaRotationX;
+
+      previousMousePosition = {
+        x: event.clientX,
+        y: event.clientY
+      };
+    });
+
+    const loader = new THREE.FontLoader();
+    loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+      const fullText = 'HTML  CSS  JAVASCRIPT  JQUERY  REACTJS  TAILWINDCSS  PYTHON ';
+      const letters = fullText.split('').reverse();
+      const total = letters.length;
+
+      letters.forEach((char, i) => {
+        if (char === ' ') return;
+
+        const geometry = new THREE.TextGeometry(char, {
+          font: font,
+          size: fontSize,
+          height: 0.05,
+          curveSegments: 8
+        });
+
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const mesh = new THREE.Mesh(geometry, material);
+
+        const angle = (i / total) * Math.PI * 2;
+        const x = radius * Math.cos(angle);
+        const z = radius * Math.sin(angle);
+
+        mesh.position.set(x, 0, z);
+        mesh.lookAt(0, 0, 0);
+        mesh.rotation.y += Math.PI;
+
+        ringGroup.add(mesh);
+      });
+
+      const fullText2 = ' PYTHON TAILWINDCSS REACTJS JQUERY JAVASCRIPT CSS HTML ';
+      const letters2 = fullText2.split('').reverse();
+      const total2 = letters2.length;
+
+      letters2.forEach((char, i) => {
+        if (char === ' ') return;
+
+        const geometry = new THREE.TextGeometry(char, {
+          font: font,
+          size: fontSize,
+          height: 0.05,
+          curveSegments: 8
+        });
+
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const mesh = new THREE.Mesh(geometry, material);
+
+        const angle = (i / total2) * Math.PI * 2;
+        const x = radius * Math.cos(angle);
+        const z = radius * Math.sin(angle);
+
+        mesh.position.set(x, 0, z);
+        mesh.lookAt(0, 0, 0);
+        mesh.rotation.y += Math.PI;
+
+        ringGroup2.add(mesh);
+      });
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (!isDragging) {
+        ringGroup.rotation.y += rotationVelocityY;
+        ringGroup2.rotation.y -= rotationVelocityY;
+
+        ringGroup.rotation.x = Math.sin(Date.now() * 0.001) * 0.3;
+        ringGroup2.rotation.x = Math.sin(Date.now() * 0.001 + 2) * 0.3;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // ✅ Odśwież stronę, jeśli zmieni się szerokość
+    let currentWidth = $(window).width();
+
+    $(window).on('resize', () => {
+      if ($(window).width() !== currentWidth) {
+        location.reload();
+      }
+    });
+  </script>
+</body>
 </html>
