@@ -101,6 +101,15 @@ canvas { display: block; width: 100%; height: 100%; margin: 0 auto; }
 .lonely::before {
     background-image: url('images/lonely.svg');
 }
+.digitalcom::before {
+    background-image: url('images/digitalcomlogo.png');
+}
+.bella::before {
+    background-image: url('images/bellanapolilogo.png');
+}
+.english::Before {
+    background-image: url('images/englishcourselogo.png');
+}
 
 picture img {
     width: 150px;
